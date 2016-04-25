@@ -66,43 +66,36 @@ var play =
         //this.move(Phaser.DOWN);
     },
 
-    update: function() {
-        //  Collide the this.player and the stars with the platforms
-       // this.physics.arcade.collide(this.player, platforms);
-
-
-        //  Reset the this.players velocity (movement)
-        //this.player.body.velocity.x = 0;
-
-        if (this.cursors.left.isDown)
-        {
+    playerKeys: function () {
+        if (this.cursors.left.isDown) {
             //  Move to the left
             this.player.body.x -= this.player.speed; //this.player speed
             this.player.animations.play('left');
         }
-        else if (this.cursors.right.isDown)
-        {
+        else if (this.cursors.right.isDown) {
             //  Move to the right
             this.player.body.x += this.player.speed;
             this.player.animations.play('right');
         }
-        else if (this.cursors.down.isDown)
-        {
+        else if (this.cursors.down.isDown) {
             this.player.body.y += this.player.speed;
             this.player.animations.play('down');
         }
-        else if (this.cursors.up.isDown)
-        {
+        else if (this.cursors.up.isDown) {
             this.player.body.y -= this.player.speed;
             this.player.animations.play('up');
         }
-        else
-        {
+        else {
             //  Stand still
             this.player.body.velocity = 0;
             this.player.animations.stop();
             this.player.frame = 1;
         }
+    },
+
+    update: function() {
+
+        this.playerKeys();
         
         this.physics.arcade.collide(this.player, this.layer);
 
