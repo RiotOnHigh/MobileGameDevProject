@@ -23,12 +23,16 @@ var menu =
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.scale.pageAlignHorizontally = true;
         this.scale.pageAlignVertically = true;
-        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;this.scale.minWidth = 480;this.scale.minHeight = 260;this.scale.maxWidth = 1024;this.scale.maxHeight = 768;this.scale.forceLandscape = true;this.scale.pageAlignHorizontally = true;
+        this.scale.minWidth = 640;
+        this.scale.minHeight = 360;
+        this.scale.maxWidth = 1024;
+        this.scale.maxHeight = 768;
+        this.scale.forceLandscape = true;
 
         // Add a sprite to your game, here the sprite will be the game's logo
         // Parameters are : X , Y , image name (see above)
         this.title = this.game.add.sprite(0, 0, 'title');
-        this.start = this.game.add.sprite(game.world.centerX - 95, 400, 'start');
+        //this.start = this.game.add.sprite(game.world.centerX - 95, 400, 'start');
 
         // Add menu screen.
         // It will act as a button to start the game.

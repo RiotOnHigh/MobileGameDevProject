@@ -12,6 +12,7 @@ var play =
         this.load.spritesheet('character','Assets/Images/character.png',32,32);
         this.cursors = this.input.keyboard.createCursorKeys();
 
+        this.game.world.setBounds(-256, -128, 1240, 800);
         this.map = null;
         this.layer = null;
 
@@ -36,11 +37,8 @@ var play =
         //  We're going to be using physics, so enable the Arcade Physics system
         this.physics.startSystem(Phaser.Physics.ARCADE);
 
-        this.autoScreenScaling();
-
-        //this.add.button(this.world.centerX, this.world.centerY, 'button', startGame, this,2,1,0);
-        //this.add.button(0, 0, 'button2', startGame2, this,2,1,0);
-
+        //this.autoScreenScaling();
+        
         //  Adding the map and setting the collision
         this.map = this.add.tilemap('map');
         this.map.addTilesetImage('tiles', 'tiles');
@@ -55,7 +53,7 @@ var play =
 
         //  Player physics properties.
         this.physics.arcade.enable(this.player);
-        this.player.body.collideWorldBounds = true;
+        //this.player.body.collideWorldBounds = true;
 
         //  Adding player animations
         this.player.animations.add('down', [0, 1, 2, 1], 10, true);
@@ -64,6 +62,9 @@ var play =
         this.player.animations.add('up', [9, 10, 11, 10], 10, true);
 
         //this.move(Phaser.DOWN);
+
+        game.camera.follow(this.player);
+
     },
 
     playerKeys: function () {
@@ -91,6 +92,9 @@ var play =
             this.player.animations.stop();
             this.player.frame = 1;
         }
+
+
+
     },
 
     update: function() {
@@ -117,7 +121,7 @@ var play =
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
         this.scale.pageAlignHorizontally = true;
         this.scale.pageAlignVertically = true;
-        this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+        this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
         this.scale.minWidth = 480;
         this.scale.minHeight = 260;
         this.scale.maxWidth = 1024;
@@ -149,6 +153,10 @@ var play =
         }
 
         //this.this.debug.geom(this.turnPoint, '#ffff00');
+
+        game.debug.cameraInfo(game.camera, 32, 32);
+
+        game.debug.spriteCoords(this.player, 32, 200);
 
     },
 

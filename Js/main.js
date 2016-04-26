@@ -2,7 +2,7 @@
  * Created by B00252361 on 22/04/2016.
  */
     //Initiate the phaser framework
-var game = new Phaser.Game(800, 640, Phaser.CANVAS);
+var game = new Phaser.Game(640, 360, Phaser.CANVAS);
 
     //Initiate the game state
 //var game;
@@ -14,4 +14,4 @@ game.state.add('menu', menu);
 // Adding the Game state.
 game.state.add('play', play);
 
-game.state.start('play');
+game.state.start('menu');
