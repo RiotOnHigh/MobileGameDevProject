@@ -1,5 +1,30 @@
 var player;
 
+//firebase stuff
+var fb = new Firebase("https://glaring-fire-4830.firebaseio.com/"),
+    locations = {};
+    //result_box = document.getElementById("result");
+if (fb) {
+    // This gets a reference to the 'location" node.
+    var fbLocation = fb.child("/location");
+    // Now we can install event handlers for nodes added, changed and removed.
+    fbLocation.on('child_added', function(sn){
+        var data = sn.val();
+        console.dir({'added': data});
+        locations[sn.key()] = data;
+    });
+    fbLocation.on('child_changed', function(sn){
+        var data = sn.val();
+        locations[sn.key()] = data;
+        console.dir({'moved': data})
+    });
+    fbLocation.on('child_removed', function(sn){
+        var data = sn.val();
+        delete locations[sn.key()];
+        console.dir(({'removed': data}));
+    });
+}
+
 var play =
 {
     preload: function() {
@@ -12,7 +37,7 @@ var play =
         this.load.spritesheet('character','Assets/Images/character.png',32,32);
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this.game.world.setBounds(-256, -128, 1240, 800);
+        this.world.setBounds(-256, -128, 1240, 800);
         this.map = null;
         this.layer = null;
 
@@ -37,35 +62,33 @@ var play =
         //  We're going to be using physics, so enable the Arcade Physics system
         this.physics.startSystem(Phaser.Physics.ARCADE);
 
-        //this.autoScreenScaling();
-        
         //  Adding the map and setting the collision
         this.map = this.add.tilemap('map');
         this.map.addTilesetImage('tiles', 'tiles');
         this.layer = this.map.createLayer('Tile Layer 1');
         this.map.setCollision(20, true, this.layer);
+        this.map.setCollision(4, true, this.layer);
 
         // The this.player and its settings
         this.player = this.add.group();
         this.player = this.add.sprite(48, 272, 'character');
+        this.physics.arcade.enable(this.player);
         this.player.speed = 2;
         this.player.anchor.set(0.5);
-
-        //  Player physics properties.
-        this.physics.arcade.enable(this.player);
-        //this.player.body.collideWorldBounds = true;
-
-        //  Adding player animations
         this.player.animations.add('down', [0, 1, 2, 1], 10, true);
         this.player.animations.add('left', [3, 4, 5, 4], 10, true);
         this.player.animations.add('right', [6, 7, 8, 7], 10, true);
         this.player.animations.add('up', [9, 10, 11, 10], 10, true);
 
-        //this.move(Phaser.DOWN);
+        //camera
+        this.camera.follow(this.player);
 
-        game.camera.follow(this.player);
-
+        //projectiles
+        this.arrow = this.add.group();
+        this.physics.arcade.enable(this.arrow);
+        this.arrow.createMultiple(20, 'character');
     },
+
 
     playerKeys: function () {
         if (this.cursors.left.isDown) {
@@ -98,6 +121,8 @@ var play =
     },
 
     update: function() {
+
+        updateLocation(getKey('Fredy'),'Fredy',this.player.x,this.player.y);
 
         this.playerKeys();
         
@@ -154,9 +179,8 @@ var play =
 
         //this.this.debug.geom(this.turnPoint, '#ffff00');
 
-        game.debug.cameraInfo(game.camera, 32, 32);
-
-        game.debug.spriteCoords(this.player, 32, 200);
+        //game.debug.cameraInfo(game.camera, 32, 32);
+        //game.debug.spriteCoords(this.player, 32, 200);
 
     },
 
@@ -216,7 +240,44 @@ var play =
 
 };
 
+function addLocation(name, x, y) {
+    // Prevent a duplicate name...
+    if (getKey(name)) return;
+    // Name is valid - go ahead and add it...
+    fb.child("/location").push({
+        player: name,
+        x: x,
+        y: y,
+        timestamp: Firebase.ServerValue.TIMESTAMP
+    }, function(err) {
+        if(err) console.dir(err);
+        //showLocations();
+    });
+}
 
+function getKey(name){
+    var loc;
+    for(loc in locations){
+        if(locations[loc].player === name){
+            return loc;
+        }
+    }
+    return null;
+}
+
+function updateLocation(ref, name, x, y){
+    fb.child("/location/" + ref).set({
+        player: name,
+        x: x,
+        y: y,
+        timestamp: Firebase.ServerValue.TIMESTAMP
+    }, function(err) {
+        if(err) {
+            console.dir(err);
+        }
+        //showLocations();
+    });
+}
 
 function startGame2 () {
     // Change the state to the actual this.
