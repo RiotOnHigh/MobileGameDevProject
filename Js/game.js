@@ -23,6 +23,11 @@ if (fb) {
     });
 }
 
+var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+
+
+
+
 var play =
 {
     preload: function() {
@@ -148,6 +153,9 @@ var play =
         this.camera.follow(this.control);
 
         //console.log(this.control.name);
+        //  The Text is positioned at 0, 100
+        this.text = this.add.text(this.control.body.x-200, this.control.body.y-64, this.enemy.name + " is not connected", style);
+        this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
     },
 
     fire : function () {
@@ -207,9 +215,11 @@ var play =
     },
 
     update: function() {
-        if (readiness[getRKey(this.enemy.name)].ingame)
-            updateReadiness(getRKey(this.enemy.name),this.enemy.name,false,true);
-        //add text saying that the other player has joined ?
+
+        if (readiness[getRKey(this.enemy.name)].ingame) {
+            updateReadiness(getRKey(this.enemy.name), this.enemy.name, false, true);
+            this.text.kill();
+
 
         updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y);
         //updateLocation(getKey(this.enemy.name),this.enemy.name,this.enemy.x,this.enemy.y);
@@ -243,6 +253,7 @@ var play =
         this.directions[2] = this.map.getTileRight(this.layer.index, this.marker.x, this.marker.y);
         this.directions[3] = this.map.getTileAbove(this.layer.index, this.marker.x, this.marker.y);
         this.directions[4] = this.map.getTileBelow(this.layer.index, this.marker.x, this.marker.y);
+        }
     },
 
     render: function() {

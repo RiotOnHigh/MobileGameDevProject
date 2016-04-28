@@ -40,12 +40,15 @@ var lobby =
     create : function() {
         this.add.button(0, 0, 'button', startGame1, this,2,1,0);
         this.add.button(200, 0, 'button', startGame2, this,2,1,0);
-
+        this.text = this.add.text(150, 200, "player1 ready:" + readiness[getRKey('player1')].ready, style);
+        this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+        this.text2 = this.add.text(150, 300, "player2 ready:" + readiness[getRKey('player2')].ready, style);
+        this.text2.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
     },
 
     update : function() {
-
-
+        this.text.setText("player1 ready:" + readiness[getRKey('player1')].ready);
+        this.text2.setText("player2 ready:" + readiness[getRKey('player2')].ready);
         if ( readiness[getRKey('player1')].ready==true && readiness[getRKey('player2')].ready==true){
             console.log(readiness[getRKey('player1')].ready);
             console.log(readiness[getRKey('player2')].ready);
