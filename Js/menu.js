@@ -2,6 +2,7 @@
  * Created by B00252361 on 22/04/2016.
  */
 var button;
+var player;
 
 var menu =
 {
@@ -36,12 +37,19 @@ var menu =
 
         // Add menu screen.
         // It will act as a button to start the game.
-        this.add.button(0, 0, 'button', startGame, this,2,1,0);
-
+        this.add.button(0, 0, 'button', startGame1, this,2,1,0);
+        this.add.button(200, 0, 'button', startGame2, this,2,1,0);
     }
 };
 
-function startGame () {
+function startGame1 () {
     // Change the state to the actual game.
+    player = 'player1';
+    game.state.start('play');
+}
+
+function startGame2 () {
+    // Change the state to the actual game.
+    player = 'player2';
     game.state.start('play');
 }

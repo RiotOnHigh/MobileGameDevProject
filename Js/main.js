@@ -14,4 +14,7 @@ game.state.add('menu', menu);
 // Adding the Game state.
 game.state.add('play', play);
 
+//adding the gameover state
+game.state.add('gameOver', gameOver);
+
 game.state.start('menu');
