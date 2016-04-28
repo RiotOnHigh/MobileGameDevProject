@@ -1,9 +1,7 @@
 var winner;
 
-//firebase stuff
-var fb = new Firebase("https://glaring-fire-4830.firebaseio.com/"),
-    locations = {};
-    //result_box = document.getElementById("result");
+var locations = {};
+
 if (fb) {
     // This gets a reference to the 'location" node.
     var fbLocation = fb.child("/location");
@@ -38,7 +36,7 @@ var play =
         this.load.spritesheet('character','Assets/Images/character.png',32,32);
         this.cursors = this.input.keyboard.createCursorKeys();
         console.log(player);
-
+        updateReadiness(getRKey(player),player,true,true);
     },
 
     create: function() {
@@ -209,6 +207,9 @@ var play =
     },
 
     update: function() {
+        if (readiness[getRKey(this.enemy.name)].ingame)
+            updateReadiness(getRKey(this.enemy.name),this.enemy.name,false,true);
+        //add text saying that the other player has joined ?
 
         updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y);
         //updateLocation(getKey(this.enemy.name),this.enemy.name,this.enemy.x,this.enemy.y);
@@ -277,7 +278,6 @@ var play =
         removeLocation(this.enemy.name);
     }
 };
-
 
 function addLocation(name, x, y) {
     // Prevent a duplicate name...

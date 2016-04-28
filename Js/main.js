@@ -11,6 +11,8 @@ var game = new Phaser.Game(640, 360, Phaser.CANVAS);
 //Second is an object containing the needed methods for state functionality
 game.state.add('menu', menu);
 
+game.state.add('lobby', lobby);
+
 // Adding the Game state.
 game.state.add('play', play);
 

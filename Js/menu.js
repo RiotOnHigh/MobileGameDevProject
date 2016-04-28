@@ -1,8 +1,9 @@
 /**
  * Created by B00252361 on 22/04/2016.
  */
-var button;
-var player;
+
+//firebase stuff
+var fb = new Firebase("https://glaring-fire-4830.firebaseio.com/");
 
 var menu =
 {
@@ -15,6 +16,8 @@ var menu =
         this.load.image('title', 'Assets/Images/PlaceholderTitle.png');
         this.load.image('start', 'Assets/Images/StartButton.jpg');
         this.load.spritesheet('button','Assets/Images/button_sprite_sheet.png',193,71);
+        
+        
     },
 
     //Executes everything after loaded
@@ -37,19 +40,12 @@ var menu =
 
         // Add menu screen.
         // It will act as a button to start the game.
-        this.add.button(0, 0, 'button', startGame1, this,2,1,0);
-        this.add.button(200, 0, 'button', startGame2, this,2,1,0);
+        this.add.button(this.world.width/2, this.world.height/2, 'button', toLobby, this,2,1,0);
     }
 };
 
-function startGame1 () {
-    // Change the state to the actual game.
-    player = 'player1';
-    game.state.start('play');
+function toLobby () {
+    // Change the state to lobby
+    game.state.start('lobby');
 }
-
-function startGame2 () {
-    // Change the state to the actual game.
-    player = 'player2';
-    game.state.start('play');
-}
+ 
