@@ -32,14 +32,18 @@ var lobby =
 {
 
     preload : function() {
+        this.load.image('title', 'Assets/Images/TitleBackground.png');
         this.load.spritesheet('button','Assets/Images/button_sprite_sheet.png',193,71);
+        this.load.spritesheet('player1','Assets/Images/player1.png',193,71);
+        this.load.spritesheet('player2','Assets/Images/player2.png',193,71);
         addReadiness('player1',false, false);
         addReadiness('player2',false, false);
     },
 
     create : function() {
-        this.add.button(0, 0, 'button', startGame1, this,2,1,0);
-        this.add.button(200, 0, 'button', startGame2, this,2,1,0);
+        this.title = this.game.add.sprite(0, 0, 'title');
+        this.add.button(0, 0, 'player1', startGame1, this,1,0,1);
+        this.add.button(200, 0, 'player2', startGame2, this,1,0,1);
         this.text = this.add.text(150, 200, "player1 ready:" + readiness[getRKey('player1')].ready, style);
         this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
         this.text2 = this.add.text(150, 300, "player2 ready:" + readiness[getRKey('player2')].ready, style);

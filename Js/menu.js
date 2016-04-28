@@ -13,9 +13,9 @@ var menu =
         // Loading images is required so that later on we can create sprites based on the them.
         // The first argument is how our image will be refered to,
         // the second one is the path to our file.
-        this.load.image('title', 'Assets/Images/PlaceholderTitle.png');
+        this.load.image('title', 'Assets/Images/TitleBackground.png');
         this.load.image('start', 'Assets/Images/StartButton.jpg');
-        this.load.spritesheet('button','Assets/Images/button_sprite_sheet.png',193,71);
+        this.load.spritesheet('button','Assets/Images/StartClick.png',193,71);
         
         
     },
@@ -40,7 +40,7 @@ var menu =
 
         // Add menu screen.
         // It will act as a button to start the game.
-        this.add.button(this.world.width/2, this.world.height/2, 'button', toLobby, this,2,1,0);
+        this.add.button(this.world.width/2, this.world.height/2, 'button', toLobby, this,1,0,2);
     }
 };
 
