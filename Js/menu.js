@@ -16,8 +16,8 @@ var menu =
         this.load.image('title', 'Assets/Images/TitleBackground.png');
         this.load.image('start', 'Assets/Images/StartButton.jpg');
         this.load.spritesheet('button','Assets/Images/StartClick.png',193,71);
-        
-        
+
+
     },
 
     //Executes everything after loaded

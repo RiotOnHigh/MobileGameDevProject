@@ -101,12 +101,18 @@ function updateReadiness(ref, name, ready, ingame){
 
 function startGame1 () {
     // Change the state to the actual game.
+    if (player == 'player2'){
+        updateReadiness(getRKey(player),player,false,false);
+    }
     player = 'player1';
     updateReadiness(getRKey(player),player,true,false);
 }
 
 function startGame2 () {
     // Change the state to the actual game.
+    if (player == 'player1'){
+        updateReadiness(getRKey(player),player,false,false);
+    }
     player = 'player2';
     updateReadiness(getRKey(player),player,true,false);
 }

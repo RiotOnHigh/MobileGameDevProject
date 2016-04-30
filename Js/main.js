@@ -1,10 +1,10 @@
 /**
  * Created by B00252361 on 22/04/2016.
  */
-    //Initiate the phaser framework
+//Initiate the phaser framework
 var game = new Phaser.Game(640, 360, Phaser.CANVAS);
 
-    //Initiate the game state
+//Initiate the game state
 //var game;
 
 //First parameter is how our state will be called

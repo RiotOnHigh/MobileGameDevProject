@@ -23,7 +23,7 @@ if (fb) {
     });
 }
 
-var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+var style = { font: "bold 32px Blackadder ITC", fill: "#00FF00", boundsAlignH: "center", boundsAlignV: "middle" };
 
 
 
@@ -39,12 +39,19 @@ var play =
         this.load.image('tiles', 'assets/Images/tiles.png');
         this.load.image('bullet', 'assets/Images/purple_ball.png');
         this.load.spritesheet('character','Assets/Images/character.png',32,32);
+        this.load.image('compass', 'assets/images/compass_rose.png');
+        this.load.image('touch_segment', 'assets/images/touch_segment.png');
+        this.load.image('touch', 'assets/images/touch.png');
         this.cursors = this.input.keyboard.createCursorKeys();
         console.log(player);
         updateReadiness(getRKey(player),player,true,true);
     },
 
     create: function() {
+
+        this.game.touchControl = this.game.plugins.add(Phaser.Plugin.TouchControl);
+        this.game.touchControl.inputEnable();
+
         //  We're going to be using physics, so enable the Arcade Physics system
         this.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -95,7 +102,7 @@ var play =
             this.control = this.add.group();
             this.control = this.add.sprite(48, 272, 'character');
             this.control.name = this.player1.name;
-            addLocation('player1',this.control.x,this.control.y);
+            addLocation('player1',this.control.x,this.control.y,'stop');
             this.physics.arcade.enable(this.control);
             this.control.speed = 2;
             this.control.anchor.set(0.5,0.5);
@@ -109,7 +116,7 @@ var play =
             this.enemy = this.add.group();
             this.enemy = this.add.sprite(528, 272, 'character');
             this.enemy.name = 'player2';
-            addLocation('player2',this.enemy.x,this.enemy.y);
+            addLocation('player2',this.enemy.x,this.enemy.y,'stop');
             this.physics.arcade.enable(this.enemy);
             this.enemy.speed = 2;
             this.enemy.anchor.set(0.5,0.5);
@@ -124,7 +131,7 @@ var play =
             this.control = this.add.group();
             this.control = this.add.sprite(528, 272, 'character');
             this.control.name = this.player2.name;
-            addLocation('player2',this.control.x,this.control.y);
+            addLocation('player2',this.control.x,this.control.y,'stop');
             this.physics.arcade.enable(this.control);
             this.control.speed = 2;
             this.control.anchor.set(0.5,0.5);
@@ -138,7 +145,7 @@ var play =
             this.enemy = this.add.group();
             this.enemy = this.add.sprite(48, 272, 'character');
             this.enemy.name = 'player1';
-            addLocation('player1',this.enemy.x,this.enemy.y);
+            addLocation('player1',this.enemy.x,this.enemy.y,'stop');
             this.physics.arcade.enable(this.enemy);
             this.enemy.speed = 2;
             this.enemy.anchor.set(0.5,0.5);
@@ -167,7 +174,7 @@ var play =
             this.shot.reset(this.control.body.x+16, this.control.body.y+16);
 
             //this.shot.move(this.current);
-           this.physics.arcade.moveToPointer(this.shot, 250);
+            this.physics.arcade.moveToPointer(this.shot, 250);
         }
     },
 
@@ -177,27 +184,32 @@ var play =
             this.control.body.x -= this.control.speed; //this.player1 speed
             this.control.animations.play('left');
             this.current = Phaser.LEFT;
+            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'left');
         }
         else if (this.cursors.right.isDown) {
             //  Move to the right
             this.control.body.x += this.control.speed;
             this.control.animations.play('right');
             this.current = Phaser.RIGHT;
+            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'right');
         }
         else if (this.cursors.down.isDown) {
             this.control.body.y += this.control.speed;
             this.control.animations.play('down');
             this.current = Phaser.DOWN;
+            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'down');
         }
         else if (this.cursors.up.isDown) {
             this.control.body.y -= this.control.speed;
             this.control.animations.play('up');
             this.current = Phaser.UP;
+            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'up');
         }
         else {
             //  Stand still
             this.control.body.velocity = 0;
             this.control.animations.stop();
+            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'stop');
             //this.player1.frame = 1;
         }
         //console.log(this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown);
@@ -206,13 +218,32 @@ var play =
             this.fire();
         }
         /*function() {
-            this.bullet = this.bullet.getFirstExists(false);
-            this.bullet.reset(this.player1.body.x, this.player1.body.y);
-            this.bullet.body.rotation = this.physics.arcade.angleToPointer(this.current);
-        }*/
+         this.bullet = this.bullet.getFirstExists(false);
+         this.bullet.reset(this.player1.body.x, this.player1.body.y);
+         this.bullet.body.rotation = this.physics.arcade.angleToPointer(this.current);
+         }*/
 
 
     },
+
+    enemyKeys: function () {
+        if (locations[getKey(this.enemy.name)].animation == 'left') {
+            this.enemy.animations.play('left');
+        }
+        else if (locations[getKey(this.enemy.name)].animation == 'right') {
+            this.enemy.animations.play('right');
+        }
+        else if (locations[getKey(this.enemy.name)].animation == 'down') {
+            this.enemy.animations.play('down');
+        }
+        else if (locations[getKey(this.enemy.name)].animation == 'up') {
+            this.enemy.animations.play('up');
+        }
+        else if (locations[getKey(this.enemy.name)].animation == 'stop'){
+            this.enemy.animations.stop();
+        }
+    },
+
 
     update: function() {
 
@@ -221,38 +252,37 @@ var play =
             this.text.kill();
 
 
-        updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y);
-        //updateLocation(getKey(this.enemy.name),this.enemy.name,this.enemy.x,this.enemy.y);
-        this.enemy.body.x = locations[getKey(this.enemy.name)].x-16;
-        this.enemy.body.y = locations[getKey(this.enemy.name)].y-16;
+            //updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y);
+            //updateLocation(getKey(this.enemy.name),this.enemy.name,this.enemy.x,this.enemy.y);
+            this.enemy.body.x = locations[getKey(this.enemy.name)].x-16;
+            this.enemy.body.y = locations[getKey(this.enemy.name)].y-16;
 
-        this.playerKeys();
-        
-        this.physics.arcade.collide(this.control, this.layer);
-        this.physics.arcade.overlap(this.enemy,this.bullets,function(){
-            play.shot.kill();
-           // play.player2.currentLife--;
-            //console.log(play.player2.currentLife);
-        });
+            this.playerKeys();
+            this.enemyKeys();
 
-        /*if (this.player2.currentLife <=0) {
-            winner = 'player1';
-            this.state.start('gameOver');
-        }
+            this.physics.arcade.collide(this.control, this.layer);
+            this.physics.arcade.overlap(this.enemy,this.bullets,function(){
+                play.shot.kill();
+                play.enemy.currentLife--;
+                console.log(play.enemy.currentLife);
+            });
 
-        if (this.player1.currentLife <=0) {
-            winner = 'player2';
-            this.state.start('gameOver');
-        }*/
+            if (this.enemy.currentLife <=0) {
+                winner = this.control.name;
+                this.state.start('gameOver');
+            } else if (this.control.currentLife <=0){
+                winner = this.enemy.name;
+                this.state.start('gameOver');
+            }
 
-        this.marker.x = this.math.snapToFloor(Math.floor(this.control.x), this.gridsize) / this.gridsize;
-        this.marker.y = this.math.snapToFloor(Math.floor(this.control.y), this.gridsize) / this.gridsize;
+            this.marker.x = this.math.snapToFloor(Math.floor(this.control.x), this.gridsize) / this.gridsize;
+            this.marker.y = this.math.snapToFloor(Math.floor(this.control.y), this.gridsize) / this.gridsize;
 
-        //  Update our grid sensors
-        this.directions[1] = this.map.getTileLeft(this.layer.index, this.marker.x, this.marker.y);
-        this.directions[2] = this.map.getTileRight(this.layer.index, this.marker.x, this.marker.y);
-        this.directions[3] = this.map.getTileAbove(this.layer.index, this.marker.x, this.marker.y);
-        this.directions[4] = this.map.getTileBelow(this.layer.index, this.marker.x, this.marker.y);
+            //  Update our grid sensors
+            this.directions[1] = this.map.getTileLeft(this.layer.index, this.marker.x, this.marker.y);
+            this.directions[2] = this.map.getTileRight(this.layer.index, this.marker.x, this.marker.y);
+            this.directions[3] = this.map.getTileAbove(this.layer.index, this.marker.x, this.marker.y);
+            this.directions[4] = this.map.getTileBelow(this.layer.index, this.marker.x, this.marker.y);
         }
     },
 
@@ -275,9 +305,9 @@ var play =
                 color = 'rgba(255,255,255,0.3)';
             }
 
-            game.debug.geom(new Phaser.Rectangle(this.directions[t].worldX, this.directions[t].worldY, 32, 32), color, true);
+            //game.debug.geom(new Phaser.Rectangle(this.directions[t].worldX, this.directions[t].worldY, 32, 32), color, true);
         }
-        game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);
+        //game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);
         //this.this.debug.geom(this.turnPoint, '#ffff00');
         //game.debug.cameraInfo(game.camera, 32, 32);
         //game.debug.spriteCoords(this.player1, 32, 200);
@@ -290,7 +320,7 @@ var play =
     }
 };
 
-function addLocation(name, x, y) {
+function addLocation(name, x, y, anim) {
     // Prevent a duplicate name...
     if (getKey(name)) return;
     // Name is valid - go ahead and add it...
@@ -298,6 +328,7 @@ function addLocation(name, x, y) {
         player: name,
         x: x,
         y: y,
+        animation : anim,
         timestamp: Firebase.ServerValue.TIMESTAMP
     }, function(err) {
         if(err) console.dir(err);
@@ -315,11 +346,12 @@ function getKey(name){
     return null;
 }
 
-function updateLocation(ref, name, x, y){
+function updateLocation(ref, name, x, y, anim){
     fb.child("/location/" + ref).set({
         player: name,
         x: x,
         y: y,
+        animation : anim,
         timestamp: Firebase.ServerValue.TIMESTAMP
     }, function(err) {
         if(err) {
@@ -332,7 +364,7 @@ function updateLocation(ref, name, x, y){
 function removeLocation(ref){
     fb.child("/location/" + ref).set(null, function(err){
         if (err) console.dir(err);
-       //showLocations();
+        //showLocations();
     });
 }
 

@@ -10,7 +10,8 @@ var gameOver = {
     },
 
     create : function() {
-        this.add.text(winner, game.world.width/2, game.world.height/2);
+        console.log(winner);
+        this.text = this.add.text(250, 180, "The winner is : " + winner, style);
 
     }
 
