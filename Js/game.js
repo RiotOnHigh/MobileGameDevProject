@@ -98,7 +98,19 @@ var play =
         this.compare2 = this.player2.name.localeCompare(player);
         console.log(this.compare2);
         if (this.compare == 0) {
-            //player in control
+
+            this.control = this.add.sprite(48, 272, 'character');
+            this.control.anchor.set(0.5);
+            this.control.name = this.player1.name;
+            addLocation('player1',this.control.x,this.control.y,'stop');
+            this.physics.arcade.enable(this.control);
+            this.control.speed = 2;
+            this.control.animations.add('down', [0, 1, 2, 1], 10, true);
+            this.control.animations.add('left', [3, 4, 5, 4], 10, true);
+            this.control.animations.add('right', [6, 7, 8, 7], 10, true);
+            this.control.animations.add('up', [9, 10, 11, 10], 10, true);
+            
+            /*//player in control
             this.control = this.add.group();
             this.control = this.add.sprite(48, 272, 'character');
             this.control.name = this.player1.name;
@@ -110,7 +122,7 @@ var play =
             this.control.animations.add('left', [3, 4, 5, 4], 10, true);
             this.control.animations.add('right', [6, 7, 8, 7], 10, true);
             this.control.animations.add('up', [9, 10, 11, 10], 10, true);
-            this.control.currentLife = 3;
+            this.control.currentLife = 3;*/
 
             //enemy player
             this.enemy = this.add.group();
@@ -179,27 +191,27 @@ var play =
     },
 
     playerKeys: function () {
-        if (this.cursors.left.isDown) {
+        if (this.game.touchControl.cursors.left) {
             //  Move to the left
             this.control.body.x -= this.control.speed; //this.player1 speed
             this.control.animations.play('left');
             this.current = Phaser.LEFT;
             updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'left');
         }
-        else if (this.cursors.right.isDown) {
+        else if (this.game.touchControl.cursors.right) {
             //  Move to the right
             this.control.body.x += this.control.speed;
             this.control.animations.play('right');
             this.current = Phaser.RIGHT;
             updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'right');
         }
-        else if (this.cursors.down.isDown) {
+        else if (this.game.touchControl.cursors.down) {
             this.control.body.y += this.control.speed;
             this.control.animations.play('down');
             this.current = Phaser.DOWN;
             updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'down');
         }
-        else if (this.cursors.up.isDown) {
+        else if (this.game.touchControl.cursors.up) {
             this.control.body.y -= this.control.speed;
             this.control.animations.play('up');
             this.current = Phaser.UP;
