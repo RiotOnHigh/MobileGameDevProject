@@ -32,6 +32,7 @@ var lobby =
 {
 
     preload : function() {
+        this.load.spritesheet('button','Assets/Images/StartClick.png',193,71);
         this.load.image('title', 'Assets/Images/TitleBackground.png');
         this.load.spritesheet('button','Assets/Images/button_sprite_sheet.png',193,71);
         this.load.spritesheet('player1','Assets/Images/player1.png',193,71);
@@ -48,6 +49,8 @@ var lobby =
         this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
         this.text2 = this.add.text(150, 300, "player2 ready:" + readiness[getRKey('player2')].ready, style);
         this.text2.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+        //back to menu
+        this.add.button(300,100, 'button', backToMenu, this,1,0,2);
     },
 
     update : function() {
@@ -115,4 +118,9 @@ function startGame2 () {
     }
     player = 'player2';
     updateReadiness(getRKey(player),player,true,false);
+}
+
+function backToMenu () {
+   
+    game.state.start('menu');
 }

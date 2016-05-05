@@ -14,7 +14,7 @@ var menu =
         // The first argument is how our image will be refered to,
         // the second one is the path to our file.
         this.load.image('title', 'Assets/Images/TitleBackground.png');
-        this.load.image('start', 'Assets/Images/StartButton.jpg');
+        //this.load.image('start', 'Assets/Images/StartButton.jpg');
         this.load.spritesheet('button','Assets/Images/StartClick.png',193,71);
 
 
