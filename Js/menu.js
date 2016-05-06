@@ -34,7 +34,7 @@ var menu =
 
         // Add menu buttons
         this.add.button(this.world.width/2, this.world.height/2, 'button', toLobby, this,1,0,2);
-        this.add.button(this.world.width/2, this.world.height/1.2, 'reset', resetFirebase, this,1,0,2);
+        this.add.button(this.world.width/2, this.world.height/1.4, 'reset', resetFirebase, this,1,0,2);
     },
 
     update: function() {
