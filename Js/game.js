@@ -244,9 +244,7 @@ var play =
         }
     },
 
-
     update: function() {
-
         if (readiness[getRKey(this.enemy.name)].ingame) {
             updateReadiness(getRKey(this.enemy.name), this.enemy.name, false, true);
             this.text.kill();
@@ -288,8 +286,6 @@ var play =
 
     render: function() {
 
-        //  Un-comment this to see the debug drawing
-
         for (var t = 1; t < 5; t++) {
             if (this.directions[t] === null) {
                 continue;
@@ -304,7 +300,7 @@ var play =
             if (t === this.current) {
                 color = 'rgba(255,255,255,0.3)';
             }
-
+            //  Un-comment this to see the debug drawing
             //game.debug.geom(new Phaser.Rectangle(this.directions[t].worldX, this.directions[t].worldY, 32, 32), color, true);
         }
         //game.debug.text('Active Bullets: ' + this.bullets.countLiving() + ' / ' + this.bullets.total, 32, 32);

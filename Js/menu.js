@@ -41,6 +41,8 @@ var menu =
         // Add menu screen.
         // It will act as a button to start the game.
         this.add.button(this.world.width/2, this.world.height/2, 'button', toLobby, this,1,0,2);
+        this.add.button(this.world.width/2, this.world.height/1.2, 'button', resetFirebase, this,1,0,2);
+
     }
 };
 
@@ -48,4 +50,8 @@ function toLobby () {
     // Change the state to lobby
     game.state.start('lobby');
 }
- 
+
+function resetFirebase () {
+    fb.child("/location").set(null, function(err){ if (err) console.dir(err); });
+    fb.child("/readiness").set(null, function(err){ if (err) console.dir(err); });
+}
