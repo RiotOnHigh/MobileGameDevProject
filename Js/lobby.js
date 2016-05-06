@@ -7,50 +7,47 @@ var player;
 var readiness = {};
 
 if (fb) {
-    // This gets a reference to the 'location" node.
+    // This gets a reference to the 'readiness" node.
     var fbReadiness = fb.child("/readiness");
     // Now we can install event handlers for nodes added, changed and removed.
     fbReadiness.on('child_added', function(sn){
         var data = sn.val();
-        //console.dir({'added': data});
         readiness[sn.key()] = data;
     });
     fbReadiness.on('child_changed', function(sn){
         var data = sn.val();
         readiness[sn.key()] = data;
-        //console.dir({'moved': data})
     });
     fbReadiness.on('child_removed', function(sn){
-        var data = sn.val();
         delete readiness[sn.key()];
-        //console.dir(({'removed': data}));
     });
 }
-
 
 var lobby =
 {
 
     preload : function() {
-        this.load.spritesheet('button','Assets/Images/StartClick.png',193,71);
+        this.load.spritesheet('button','Assets/Images/start.png',193,71);
         this.load.image('title', 'Assets/Images/TitleBackground.png');
         this.load.spritesheet('button','Assets/Images/button_sprite_sheet.png',193,71);
         this.load.spritesheet('player1','Assets/Images/player1.png',193,71);
         this.load.spritesheet('player2','Assets/Images/player2.png',193,71);
+        this.load.spritesheet('menu','Assets/Images/menu.png',193,71);
         addReadiness('player1',false, false);
         addReadiness('player2',false, false);
     },
 
     create : function() {
         this.title = this.game.add.sprite(0, 0, 'title');
-        this.add.button(0, 0, 'player1', startGame1, this,1,0,1);
-        this.add.button(200, 0, 'player2', startGame2, this,1,0,1);
+        this.add.button(0, 0, 'player1', startGame1, this,1,0,2);
+        this.add.button(200, 0, 'player2', startGame2, this,1,0,2);
         this.text = this.add.text(150, 200, "player1 ready:" + readiness[getRKey('player1')].ready, style);
         this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
         this.text2 = this.add.text(150, 300, "player2 ready:" + readiness[getRKey('player2')].ready, style);
         this.text2.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
+        
         //back to menu
-        this.add.button(300,100, 'button', backToMenu, this,1,0,2);
+        this.add.button(150,100, 'menu', backToMenu, this,1,0,2);
     },
 
     update : function() {

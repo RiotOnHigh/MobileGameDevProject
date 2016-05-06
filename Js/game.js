@@ -8,33 +8,24 @@ if (fb) {
     // Now we can install event handlers for nodes added, changed and removed.
     fbLocation.on('child_added', function(sn){
         var data = sn.val();
-        //console.dir({'added': data});
         locations[sn.key()] = data;
     });
     fbLocation.on('child_changed', function(sn){
         var data = sn.val();
         locations[sn.key()] = data;
-        //console.dir({'moved': data})
     });
     fbLocation.on('child_removed', function(sn){
-        var data = sn.val();
         delete locations[sn.key()];
-        //console.dir(({'removed': data}));
     });
 }
 
 var style = { font: "bold 32px Blackadder ITC", fill: "#00FF00", boundsAlignH: "center", boundsAlignV: "middle" };
 
 
-
-
 var play =
 {
     preload: function() {
-        // Loading images is required so that later on we can create sprites based on the them.
-        // The first argument is how our image will be refered to,
-        // the second one is the path to our file.
-        //this.load.spritesheet('dude','Assets/Images/dude.png',32,48);
+        // Loading images
         this.load.tilemap('map', 'Assets/Images/map2.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.image('tiles', 'assets/Images/tiles.png');
         this.load.image('bullet', 'assets/Images/purple_ball.png');
@@ -48,7 +39,7 @@ var play =
     },
 
     create: function() {
-
+        //joystick
         this.game.touchControl = this.game.plugins.add(Phaser.Plugin.TouchControl);
         this.game.touchControl.inputEnable();
 
@@ -131,7 +122,7 @@ var play =
             this.control = this.add.group();
             this.control = this.add.sprite(528, 272, 'character');
             this.control.name = this.player2.name;
-            addLocation('player2',this.control.x,this.control.y,'stop');
+            addLocation('player2',this.control.x,this.control.y, 3,'stop');
             this.physics.arcade.enable(this.control);
             this.control.speed = 2;
             this.control.anchor.set(0.5,0.5);
@@ -145,7 +136,7 @@ var play =
             this.enemy = this.add.group();
             this.enemy = this.add.sprite(48, 272, 'character');
             this.enemy.name = 'player1';
-            addLocation('player1',this.enemy.x,this.enemy.y,'stop');
+            addLocation('player1',this.enemy.x,this.enemy.y, 3,'stop');
             this.physics.arcade.enable(this.enemy);
             this.enemy.speed = 2;
             this.enemy.anchor.set(0.5,0.5);
@@ -156,74 +147,62 @@ var play =
             this.enemy.currentLife = 3;
         }
 
+        //resetting the online state for a new game
+        updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, this.control.currentLife, 'stop');
+        
         //camera
         this.camera.follow(this.control);
 
-        //console.log(this.control.name);
-        //  The Text is positioned at 0, 100
+        //connection message
         this.text = this.add.text(this.control.body.x-200, this.control.body.y-64, this.enemy.name + " is not connected", style);
         this.text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2);
     },
 
     fire : function () {
-
         if (this.time.now > this.nextFire && this.bullets.countDead() > 0)
         {
             this.nextFire = this.time.now + this.fireRate;
             this.shot = this.bullets.getFirstDead();
             this.shot.reset(this.control.body.x+16, this.control.body.y+16);
-
-            //this.shot.move(this.current);
             this.physics.arcade.moveToPointer(this.shot, 250);
         }
     },
 
     playerKeys: function () {
         if (this.cursors.left.isDown) {
-            //  Move to the left
             this.control.body.x -= this.control.speed; //this.player1 speed
             this.control.animations.play('left');
             this.current = Phaser.LEFT;
-            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'left');
+            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y,locations[getKey(this.control.name)].life, 'left');
         }
         else if (this.cursors.right.isDown) {
-            //  Move to the right
             this.control.body.x += this.control.speed;
             this.control.animations.play('right');
             this.current = Phaser.RIGHT;
-            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'right');
+            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y,locations[getKey(this.control.name)].life, 'right');
         }
         else if (this.cursors.down.isDown) {
             this.control.body.y += this.control.speed;
             this.control.animations.play('down');
             this.current = Phaser.DOWN;
-            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'down');
+            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y,locations[getKey(this.control.name)].life, 'down');
         }
         else if (this.cursors.up.isDown) {
             this.control.body.y -= this.control.speed;
             this.control.animations.play('up');
             this.current = Phaser.UP;
-            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'up');
+            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y,locations[getKey(this.control.name)].life, 'up');
         }
         else {
             //  Stand still
             this.control.body.velocity = 0;
             this.control.animations.stop();
-            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y, 'stop');
-            //this.player1.frame = 1;
+            updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y,locations[getKey(this.control.name)].life, 'stop');
         }
-        //console.log(this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR).onDown);
         if (this.input.activePointer.isDown)
         {
             this.fire();
         }
-        /*function() {
-         this.bullet = this.bullet.getFirstExists(false);
-         this.bullet.reset(this.player1.body.x, this.player1.body.y);
-         this.bullet.body.rotation = this.physics.arcade.angleToPointer(this.current);
-         }*/
-
-
     },
 
     enemyKeys: function () {
@@ -249,9 +228,6 @@ var play =
             updateReadiness(getRKey(this.enemy.name), this.enemy.name, false, true);
             this.text.kill();
 
-
-            //updateLocation(getKey(this.control.name),this.control.name,this.control.x,this.control.y);
-            //updateLocation(getKey(this.enemy.name),this.enemy.name,this.enemy.x,this.enemy.y);
             this.enemy.body.x = locations[getKey(this.enemy.name)].x-16;
             this.enemy.body.y = locations[getKey(this.enemy.name)].y-16;
 
@@ -262,13 +238,14 @@ var play =
             this.physics.arcade.overlap(this.enemy,this.bullets,function(){
                 play.shot.kill();
                 play.enemy.currentLife--;
+                updateLocation(getKey(play.enemy.name),play.enemy.name,play.enemy.x,play.enemy.y,play.enemy.currentLife, locations[getKey(play.enemy.name)].animation);
                 console.log(play.enemy.currentLife);
             });
 
-            if (this.enemy.currentLife <=0) {
+            if (locations[getKey(this.enemy.name)].life <=0) {
                 winner = this.control.name;
                 this.state.start('gameOver');
-            } else if (this.control.currentLife <=0){
+            } else if (locations[getKey(this.control.name)].life <=0){
                 winner = this.enemy.name;
                 this.state.start('gameOver');
             }
@@ -316,7 +293,7 @@ var play =
     }
 };
 
-function addLocation(name, x, y, anim) {
+function addLocation(name, x, y, life, anim) {
     // Prevent a duplicate name...
     if (getKey(name)) return;
     // Name is valid - go ahead and add it...
@@ -324,6 +301,7 @@ function addLocation(name, x, y, anim) {
         player: name,
         x: x,
         y: y,
+        life: life,
         animation : anim,
         timestamp: Firebase.ServerValue.TIMESTAMP
     }, function(err) {
@@ -342,11 +320,12 @@ function getKey(name){
     return null;
 }
 
-function updateLocation(ref, name, x, y, anim){
+function updateLocation(ref, name, x, y, life, anim){
     fb.child("/location/" + ref).set({
         player: name,
         x: x,
         y: y,
+        life: life,
         animation : anim,
         timestamp: Firebase.ServerValue.TIMESTAMP
     }, function(err) {
